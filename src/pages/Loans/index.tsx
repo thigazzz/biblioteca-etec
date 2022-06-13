@@ -93,7 +93,6 @@ export const Loans = () => {
               <th>Nome do livro</th>
               <th>Para</th>
               <th>Data de entrega</th>
-              <th>Situação</th>
               <th></th>
               <th></th>
               <th></th>

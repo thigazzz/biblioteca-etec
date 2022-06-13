@@ -9,10 +9,14 @@ export const Container = styled.div`
 
   overflow-y: scroll;
 
+  border-radius: 5px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+
   &::-webkit-scrollbar {
-    background-color: #777;
+    background-color: ${({ theme }) => theme.colors.background};
     width: 5px;
     border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
   }
 
   &::-webkit-scrollbar-thumb {
@@ -30,7 +34,7 @@ export const Container = styled.div`
 
     td,
     th {
-      padding: 10px;
+      padding: 15px;
     }
 
     thead {
@@ -47,17 +51,9 @@ export const Container = styled.div`
     tbody {
       tr {
         height: 4.5rem;
+        background-color: #fff;
+        border-bottom: 1px solid rgba(0,0,0,0.1);
 
-        &:nth-child(odd) {
-          background-color: #fff;
-        }
-        &:nth-child(even) {
-          background-color: #ddd;
-        }
-
-        button {
-            
-        }
       }
     }
   }
