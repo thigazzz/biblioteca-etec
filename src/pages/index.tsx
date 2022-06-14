@@ -30,7 +30,7 @@ function App() {
                   className="close-menu"
                 />
                 <div className="content">
-                  <a href="#">Teste</a>
+                  <a href="/loans">Empréstimos</a>
                   <a href="#">Teste</a>
                   <a href="#">Teste</a>
                   <a href="#">Teste</a>

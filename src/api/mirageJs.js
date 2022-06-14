@@ -4,7 +4,8 @@ export default function () {
 
     createServer({
         models: {
-            loan: Model
+            loan: Model,
+            book: Model,
         },
 
         seeds(server) {
@@ -18,9 +19,17 @@ export default function () {
                 situation: false,
                 dateAdt: new Date().toString()
             })
+            
+            server.create('book', {
+                id: 1,
+                bookName: 'Iliada',
+                author: 'Homero',
+                publisher: 'Putz',
+            })
         },
 
         routes() {
+            //Emprestimos
             this.get('/loans', (schema, request) => {
                 return schema.loans.all()
             })
@@ -57,6 +66,11 @@ export default function () {
 
                 return schema.loans.all()
 
+            })
+
+            //Livros
+            this.get('/books', (schema, request) => {
+                return schema.books.all()
             })
         }
     })
