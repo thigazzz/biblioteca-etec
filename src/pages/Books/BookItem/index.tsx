@@ -12,13 +12,29 @@ interface Book {
 
 interface BookItemProps {
     book: Book
+    onDelete: (id: number) => void;
+    onUpdate: (dataBook: Omit<Book, 'id'>, id: number) => void;
 }
-export const BookItem = ({book}: BookItemProps) => {
+export const BookItem = ({book, onDelete, onUpdate}: BookItemProps) => {
     const [isEdit, setIsEdit] = useState<boolean>(false);
-    const {register, handleSubmit, formState: {errors}} = useForm<FieldValues>()
+    const {register, handleSubmit, formState: {errors}} = useForm<FieldValues>({
+      defaultValues: {
+        bookName: book.bookName,
+        author: book.author,
+        publisher: book.publisher
+      }
+    })
 
     const onSubmit: SubmitHandler<FieldValues> = (data) => {
         const {bookName, author, publisher} = data
+
+        onUpdate({
+          bookName: bookName,
+          author: author,
+          publisher: publisher
+        }, book.id)
+
+        setIsEdit(false)
     }
     return (
         <Container >
@@ -38,7 +54,7 @@ export const BookItem = ({book}: BookItemProps) => {
             <AiFillDelete
               className="buttons"
               style={{ color: "red" }}
-            //   onClick={() => onDelete(loan.id)}
+              onClick={() => onDelete(book.id)}
             />
           </td>
         </>

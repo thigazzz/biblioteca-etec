@@ -1,16 +1,37 @@
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { AiOutlineClose } from "react-icons/ai";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { Modal } from "../../../components/Modal";
 
 import {Container, Input} from './style';
 
+interface Book {
+  id: number;
+  bookName: string;
+  author: string;
+  publisher: string;
+
+}
+interface handleAddBook {
+  handleAddBook: (dataBook: Omit<Book, 'id'>) => void;
+}
+
 export const AddBook = () => {
     const navigate = useNavigate()
+    const {handleAddBook} = useOutletContext<handleAddBook>()
     const {register, handleSubmit, formState: {errors}} = useForm<FieldValues>()
 
     const onSubmit: SubmitHandler<FieldValues> = (data) => {
+      console.log(data, 'Add Book')
         const {bookName, author, publisher} = data
+
+        handleAddBook({
+          bookName: bookName,
+          author: author,
+          publisher: publisher
+        })
+
+        navigate('/books')
     }
 
   return (

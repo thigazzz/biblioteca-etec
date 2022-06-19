@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { set } from "react-hook-form";
 import { Outlet, useNavigate } from "react-router-dom";
 
 import { Table } from "../../components/Table";
@@ -20,6 +21,36 @@ export const Books = () => {
   useEffect(() => {
     axios.get("/books").then(({ data }) => setBooks([...data.books]));
   }, []);
+
+  const handleAddBook = async (dataBook: Omit<Book, 'id'>) => {
+    console.log('******', dataBook)
+    const {data} = await axios.post('/books/add', {
+      ...dataBook
+    }) 
+
+    console.log(data)
+
+    setBooks([...books, data.book])
+  }
+
+  const handleDeleteBook = async (id:number) => {
+    const {data} = await axios.delete(`/books/${id}`)
+
+    console.log(data)
+
+    setBooks([...data.books])
+  }
+
+  const handleUpdateBook =async (dataBook: Omit<Book, 'id'>, id: number) => {
+    const {data} = await axios.patch(`/books/${id}`, {
+      ...dataBook
+    })
+
+    console.log(data)
+    
+    setBooks([...data.books])
+  
+  }
   return (
     <Container>
       <div className="center">
@@ -42,15 +73,14 @@ export const Books = () => {
               <BookItem
                 key={book.id}
                 book={book}
-                // onDelete={handleDeleteLoan}
-                // onUpdate={handleUpdateLoan}
+                onDelete={handleDeleteBook}
+                onUpdate={handleUpdateBook}
                 // onConcluded={handleConcludedLoan}
               />
             ))}
           </tbody>
         </Table>
-        <Outlet />
-        {/* context={{ handleAddNewLoan }} */}
+        <Outlet context={{ handleAddBook }}/>
       </div>
     </Container>
   );

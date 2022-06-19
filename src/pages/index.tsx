@@ -31,7 +31,7 @@ function App() {
                 />
                 <div className="content">
                   <a href="/loans">Empréstimos</a>
-                  <a href="#">Teste</a>
+                  <a href="/books">Livros</a>
                   <a href="#">Teste</a>
                   <a href="#">Teste</a>
                 </div>
