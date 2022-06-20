@@ -6,14 +6,16 @@ import { Modal } from "../../../components/Modal";
 import {Container, Input} from './style';
 
 interface Book {
-  id: number;
-  bookName: string;
+  tombo: number;
+  title: string;
+  CDD: number;
   author: string;
+  status: boolean;
   publisher: string;
-
 }
+
 interface handleAddBook {
-  handleAddBook: (dataBook: Omit<Book, 'id'>) => void;
+  handleAddBook: (dataBook: Omit<Book, 'status'>) => void;
 }
 
 export const AddBook = () => {
@@ -22,13 +24,12 @@ export const AddBook = () => {
     const {register, handleSubmit, formState: {errors}} = useForm<FieldValues>()
 
     const onSubmit: SubmitHandler<FieldValues> = (data) => {
-      console.log(data, 'Add Book')
-        const {bookName, author, publisher} = data
-
         handleAddBook({
-          bookName: bookName,
-          author: author,
-          publisher: publisher
+          tombo: data.tombo,
+          title: data.title,
+          author: data.author,
+          publisher: data.publisher,
+          CDD: data.CDD,
         })
 
         navigate('/books')
@@ -42,14 +43,24 @@ export const AddBook = () => {
       />
       <Container onSubmit={handleSubmit(onSubmit)}>
         <div className="input-container">
-          <label htmlFor="id-book">Nome do livro</label>
+          <label htmlFor="book-tombo">Tombo do livro</label>
+          <Input
+            type="number"
+            id="book-name"
+            isError={errors.tombo}
+            {...register("tombo", { required: "Preencha esse campo!" })}
+          />
+          {errors.tombo?.message && <small>{errors.tombo?.message}</small>}
+        </div>
+        <div className="input-container">
+          <label htmlFor="book-name">Nome do livro</label>
           <Input
             type="text"
             id="book-name"
-            isError={errors.bookName}
-            {...register("bookName", { required: "Preencha esse campo!" })}
+            isError={errors.title}
+            {...register("title", { required: "Preencha esse campo!" })}
           />
-          {errors.bookName?.message && <small>{errors.bookName?.message}</small>}
+          {errors.title?.message && <small>{errors.title?.message}</small>}
         </div>
         <div className="input-container">
           <label htmlFor="author-name">Nome do Autor</label>
@@ -72,6 +83,16 @@ export const AddBook = () => {
             {...register("publisher", { required: "Preencha esse campo!" })}
           />
           {errors.publisher?.message && <small>{errors.publisher?.message}</small>}
+        </div>
+        <div className="input-container">
+          <label htmlFor="cdd">CDD do livro</label>
+          <Input
+            type="number"
+            id="cdd"
+            isError={errors.CDD}
+            {...register("CDD", { required: "Preencha esse campo!" })}
+          />
+          {errors.CDD?.message && <small>{errors.CDD?.message}</small>}
         </div>
         <div className="input-container">
           <input type="submit" value="Emprestar" />

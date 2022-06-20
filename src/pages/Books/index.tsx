@@ -23,7 +23,7 @@ export const Books = () => {
     axios.get("/books").then(({ data }) => setBooks([...data.books]));
   }, []);
 
-  const handleAddBook = async (dataBook: Omit<Book, "id">) => {
+  const handleAddBook = async (dataBook: Omit<Book, "status">) => {
     await axios.post("/books/add", {
       ...dataBook,
     });
