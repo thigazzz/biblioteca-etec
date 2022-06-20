@@ -10,19 +10,18 @@ import { Container, Input } from "./style";
 
 interface Loan {
   id: number;
-  idBook: number;
-  bookName: string;
-  rm: number;
+  tombo_book: number;
+  id_student: number;
+  id_employee: number;
   studentName: string;
   deliveryDate: string;
   situation: boolean;
-  dateAdt: string
+  dateAdt: string;
+  description: string;
 }
 
-type AddNewLoanData = Omit<Loan, "id" |'situation' |'dateAdt'>;
-
 interface HandleAddLoan {
-  handleAddNewLoan: (data: Loan) => void;
+  handleAddNewLoan: (dataLoan: Pick<Loan, 'tombo_book' | 'id_student' | 'deliveryDate'>) => void;
 }
 
 export const AddLoan = ({}) => {
@@ -36,21 +35,11 @@ export const AddLoan = ({}) => {
 
   const {handleAddNewLoan} = useOutletContext<HandleAddLoan>()
 
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    const {idBook, bookName, rm, studentName, deliveryDate} = data
-
-    console.log(deliveryDate)
-    
+  const onSubmit: SubmitHandler<FieldValues> = (data) => {    
     handleAddNewLoan({
-      ...data,
-      id: Math.random(),
-      idBook,
-      bookName,
-      rm,
-      studentName,
-      deliveryDate: new Date(deliveryDate).toString(),
-      situation: false,
-      dateAdt: new Date().toString()
+      tombo_book: data.tomboBook,
+      id_student: data.idStudent,
+      deliveryDate: data.deliveryDate,
     })
     navigate("/loans");
   };
@@ -63,49 +52,25 @@ export const AddLoan = ({}) => {
       />
       <Container onSubmit={handleSubmit(onSubmit)}>
         <div className="input-container">
-          <label htmlFor="id-book">Codigo do livro</label>
+          <label htmlFor="tombo-book">Codigo do livro</label>
           <Input
             type="number"
-            id="id-book"
-            isError={errors.bookId}
-            {...register("idBook", { required: "Preencha esse campo!" })}
+            id="tombo-book"
+            isError={errors.tomboBook}
+            {...register("tomboBook", { required: "Preencha esse campo!" })}
           />
-          {errors.idBook?.message && <small>{errors.idBook?.message}</small>}
-        </div>
-        <div className="input-container">
-          <label htmlFor="book-name">Nome do livro</label>
-          <Input
-            type="text"
-            id="book-name"
-            isError={errors.bookName}
-            {...register("bookName", { required: "Preencha esse campo!" })}
-          />
-          {errors.bookName?.message && (
-            <small>{errors.bookName?.message}</small>
-          )}
+          {errors.tomboBook?.message && <small>{errors.tomboBook?.message}</small>}
         </div>
         <div className="input-container">
           <label htmlFor="rm">RM do aluno</label>
           <Input
             type="number"
             id="rm"
-            isError={errors.rm}
-            {...register("rm", { required: "Preencha esse campo!" })}
+            isError={errors.idStudent}
+            {...register("idStudent", { required: "Preencha esse campo!" })}
           />
-          {errors.rm?.message && (
-            <small>{errors.rm?.message}</small>
-          )}
-        </div>
-        <div className="input-container">
-          <label htmlFor="student-name">Nome do aluno</label>
-          <Input
-            type="text"
-            id="student-name"
-            isError={errors.studentName}
-            {...register("studentName", { required: "Preencha esse campo!" })}
-          />
-          {errors.studentName?.message && (
-            <small>{errors.studentName?.message}</small>
+          {errors.idStudent?.message && (
+            <small>{errors.idStudent?.message}</small>
           )}
         </div>
         <div className="input-container">

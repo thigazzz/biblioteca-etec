@@ -8,13 +8,14 @@ import { LoanItem } from "./LoanItem";
 
 interface Loan {
   id: number;
-  idBook: number;
-  bookName: string;
-  rm: number;
+  tombo_book: number;
+  id_student: number;
+  id_employee: number;
   studentName: string;
   deliveryDate: string;
   situation: boolean;
   dateAdt: string;
+  description: string;
 }
 
 export const Loans = () => {
@@ -25,59 +26,38 @@ export const Loans = () => {
     axios.get("/loans").then(({ data }) => setLoans([...data.loans]));
   }, []);
 
-  const handleAddNewLoan = async (dataLoan: Loan) => {
+  const handleAddNewLoan = async (dataLoan: Pick<Loan, 'tombo_book' | 'id_student' | 'deliveryDate'>) => {
     const { data } = await axios.post("/loans/add", {
       ...dataLoan,
     });
 
     setLoans([...loans, data.loan]);
-
-    console.log(loans);
   };
 
   const handleConcludedLoan = async (
-    dataLoan: Omit<
-      Loan,
-      | "id"
-      | "dateAdt"
-      | "rm"
-      | "idBook"
-      | "bookName"
-      | "rm"
-      | "studentName"
-      | "deliveryDate"
-      | "dateAdt"
-    >,
-    id: number
+    id: number,
+    dataLoan: Pick<Loan, 'situation'>,
   ) => {
-    const { data } = await axios.post(`/loans/concluded/${id}`, {...dataLoan});
+    await axios.post(`/loans/concluded/${id}`, {...dataLoan});
 
-    console.log(data.loans)
-
-    setLoans([...data.loans])
-
-    console.log(loans)
+    await axios.get("/loans").then(({ data }) => setLoans([...data.loans]));
   };
 
   const handleDeleteLoan = async (id: number) => {
-    const { data } = await axios.delete(`/loans/${id}`);
+    await axios.delete(`/loans/${id}`);
 
-    console.log(data.loans);
-
-    setLoans([...data.loans]);
+    await axios.get("/loans").then(({ data }) => setLoans([...data.loans]));
   };
 
   const handleUpdateLoan = async (
-    dataLoan: Omit<Loan, "id" | "dateAdt" | "rm" | "idBook">,
-    id: number
+    id: number,
+    dataLoan: Pick<Loan, 'deliveryDate'>,
   ) => {
-    const { data } = await axios.patch(`/loans/${id}`, {
+    const {data} = await axios.patch(`/loans/${id}`, {
       ...dataLoan,
     });
 
-    console.log(data);
-
-    setLoans([...data.loans]);
+    await axios.get("/loans").then(({ data }) => setLoans([...data.loans]));
   };
 
   return (
@@ -90,8 +70,8 @@ export const Loans = () => {
         <Table>
           <thead>
             <tr>
-              <th>Nome do livro</th>
-              <th>Para</th>
+              <th>Código do livro</th>
+              <th>Código do aluno</th>
               <th>Data de entrega</th>
               <th></th>
               <th></th>

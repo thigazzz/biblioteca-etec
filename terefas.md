@@ -2,6 +2,6 @@
 [x] Fazer o CRUD da editora
 [x] Fazer visual
 [X] fazer todas as funcionabilidades
-[] Arrumar os atrbutos da tablea livro
+[o] Arrumar os atrbutos da tablea livro (falta arrumar o add book)
 [] Arrumar os atributos da tabela emprestimo
 [] Adicionar a tabela aluno

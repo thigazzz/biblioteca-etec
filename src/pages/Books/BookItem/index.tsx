@@ -4,45 +4,52 @@ import {useForm, FieldValues, SubmitHandler} from 'react-hook-form';
 import {Container} from './style';
 
 interface Book {
-    id: number;
-  bookName: string;
+  tombo: number;
+  title: string;
+  CDD: number;
   author: string;
+  status: boolean;
   publisher: string;
 }
 
 interface BookItemProps {
-    book: Book
-    onDelete: (id: number) => void;
-    onUpdate: (dataBook: Omit<Book, 'id'>, id: number) => void;
+    book: Book;
+    onDelete: (id: number) => void
+    onUpdate: (id: number, data: Omit<Book, 'tombo' | 'status'>) => void
 }
 export const BookItem = ({book, onDelete, onUpdate}: BookItemProps) => {
     const [isEdit, setIsEdit] = useState<boolean>(false);
     const {register, handleSubmit, formState: {errors}} = useForm<FieldValues>({
       defaultValues: {
-        bookName: book.bookName,
+        tombo: book.tombo,
+        title: book.title,
         author: book.author,
-        publisher: book.publisher
+        publisher: book.publisher,
+        CDD: book.CDD
       }
     })
 
     const onSubmit: SubmitHandler<FieldValues> = (data) => {
-        const {bookName, author, publisher} = data
-
-        onUpdate({
-          bookName: bookName,
-          author: author,
-          publisher: publisher
-        }, book.id)
+        onUpdate(book.tombo, {
+          author: data.author,
+          title: data.title,
+          publisher: data.publisher,
+          CDD: data.CDD,
+        })
 
         setIsEdit(false)
     }
+
+    console.log(book.publisher, 'dsaaa')
     return (
         <Container >
       {!isEdit ? (
         <>
-          <td>{book.bookName}</td>
+          <td>{book.tombo}</td>
+          <td>{book.title}</td>
           <td>{book.author}</td>
           <td>{book.publisher}</td>
+          <td>{book.CDD}</td>
           <td>
             <AiFillEdit
               className="buttons"
@@ -54,20 +61,26 @@ export const BookItem = ({book, onDelete, onUpdate}: BookItemProps) => {
             <AiFillDelete
               className="buttons"
               style={{ color: "red" }}
-              onClick={() => onDelete(book.id)}
+              onClick={() => onDelete(book.tombo)}
             />
           </td>
         </>
       ) : (
         <>
           <td>
-            <input type="text" {...register("bookName")} />
+            <input type="text" {...register("tombo")} readOnly/>
+          </td>
+          <td>
+            <input type="text" {...register("title")} />
           </td>
           <td>
             <input type="text" {...register("author")} />
           </td>
           <td>
             <input type="text" {...register("publisher")} />
+          </td>
+          <td>
+            <input type="text" {...register("CDD")} />
           </td>
           <td>
             <button onClick={handleSubmit(onSubmit)} className="buttons edit">

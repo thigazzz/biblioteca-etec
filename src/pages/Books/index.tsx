@@ -1,6 +1,5 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { set } from "react-hook-form";
 import { Outlet, useNavigate } from "react-router-dom";
 
 import { Table } from "../../components/Table";
@@ -8,9 +7,11 @@ import { BookItem } from "./BookItem";
 import { Container } from "./style";
 
 interface Book {
-  id: number;
-  bookName: string;
+  tombo: number;
+  title: string;
+  CDD: number;
   author: string;
+  status: boolean;
   publisher: string;
 }
 
@@ -22,35 +23,30 @@ export const Books = () => {
     axios.get("/books").then(({ data }) => setBooks([...data.books]));
   }, []);
 
-  const handleAddBook = async (dataBook: Omit<Book, 'id'>) => {
-    console.log('******', dataBook)
-    const {data} = await axios.post('/books/add', {
-      ...dataBook
-    }) 
+  const handleAddBook = async (dataBook: Omit<Book, "id">) => {
+    await axios.post("/books/add", {
+      ...dataBook,
+    });
 
-    console.log(data)
+    await axios.get("/books").then(({ data }) => setBooks([...data.books]));
+  };
 
-    setBooks([...books, data.book])
-  }
+  const handleDeleteBook = async (id: number) => {
+    await axios.delete(`/books/${id}`);
 
-  const handleDeleteBook = async (id:number) => {
-    const {data} = await axios.delete(`/books/${id}`)
+    await axios.get("/books").then(({ data }) => setBooks([...data.books]));
+  };
 
-    console.log(data)
+  const handleUpdateBook = async (
+    id: number,
+    data: Omit<Book, "tombo" | "status">
+  ) => {
+    await axios.patch(`/books/${id}`, {
+      ...data,
+    });
 
-    setBooks([...data.books])
-  }
-
-  const handleUpdateBook =async (dataBook: Omit<Book, 'id'>, id: number) => {
-    const {data} = await axios.patch(`/books/${id}`, {
-      ...dataBook
-    })
-
-    console.log(data)
-    
-    setBooks([...data.books])
-  
-  }
+    await axios.get("/books").then(({ data }) => setBooks([...data.books]));
+  };
   return (
     <Container>
       <div className="center">
@@ -61,9 +57,11 @@ export const Books = () => {
         <Table>
           <thead>
             <tr>
+              <th>Tombo do livro</th>
               <th>Nome do livro</th>
               <th>Autor</th>
               <th>Nome da editora</th>
+              <th>Número do CDD</th>
               <th></th>
               <th></th>
             </tr>
@@ -71,16 +69,15 @@ export const Books = () => {
           <tbody>
             {books.map((book) => (
               <BookItem
-                key={book.id}
+                key={book.tombo}
                 book={book}
                 onDelete={handleDeleteBook}
                 onUpdate={handleUpdateBook}
-                // onConcluded={handleConcludedLoan}
               />
             ))}
           </tbody>
         </Table>
-        <Outlet context={{ handleAddBook }}/>
+        <Outlet context={{ handleAddBook }} />
       </div>
     </Container>
   );

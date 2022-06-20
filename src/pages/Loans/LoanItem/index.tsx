@@ -11,36 +11,24 @@ import { Container } from "./style";
 
 interface Loan {
   id: number;
-  idBook: number;
-  bookName: string;
-  rm: number;
+  tombo_book: number;
+  id_student: number;
+  id_employee: number;
   studentName: string;
   deliveryDate: string;
   situation: boolean;
+  dateAdt: string;
+  description: string;
 }
 
 interface LoanItemProps {
   loan: Loan;
   onDelete: (id: number) => void;
   onUpdate: (
-    loanData: Omit<Loan, "id" | "dateAdt" | "rm" | "idBook">,
-    id: number
+    id: number,
+    loanData: Pick<Loan, 'deliveryDate'>,
   ) => void;
-  onConcluded: (
-    dataLoan: Omit<
-      Loan,
-      | "id"
-      | "dateAdt"
-      | "rm"
-      | "idBook"
-      | "bookName"
-      | "rm"
-      | "studentName"
-      | "deliveryDate"
-      | "dateAdt"
-    >,
-    id: number
-  ) => void;
+  onConcluded: (id: number, dataLoan: Pick<Loan, "situation">) => void;
 }
 
 export const LoanItem = ({
@@ -48,15 +36,15 @@ export const LoanItem = ({
   onDelete,
   onUpdate,
   onConcluded,
-}: LoanItemProps) => {
+}:
+  
+LoanItemProps) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FieldValues>({
     defaultValues: {
-      bookName: loan.bookName,
-      studentName: loan.studentName,
       deliveryDate: new Intl.DateTimeFormat("pt-BR").format(
         new Date(loan.deliveryDate)
       ),
@@ -65,26 +53,21 @@ export const LoanItem = ({
   const [isEdit, setIsEdit] = useState<Boolean>(false);
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    const { bookName, studentName, deliveryDate, situation } = data;
-
     onUpdate(
+      loan.id,
       {
-        bookName,
-        studentName,
-        deliveryDate: new Date(deliveryDate).toString(),
-        situation,
+        deliveryDate: new Date(data.deliveryDate).toString(),
       },
-      loan.id
     );
 
     setIsEdit(false);
   };
   return (
-    <Container isConcluded={loan.situation} test={'#000'}>
+    <Container isConcluded={loan.situation} test={"#000"}>
       {!isEdit ? (
         <>
-          <td>{loan.bookName}</td>
-          <td>{loan.studentName}</td>
+          <td>{loan.tombo_book}</td>
+          <td>{loan.id_student}</td>
           <td>
             {new Intl.DateTimeFormat("pt-BR").format(
               new Date(loan.deliveryDate)
@@ -109,20 +92,18 @@ export const LoanItem = ({
               className="buttons"
               style={{ color: "green" }}
               onClick={() =>
-                onConcluded({ situation: !loan.situation }, loan.id)
+                onConcluded(loan.id,{ situation: !loan.situation }, )
               }
-            >
-              Concluido
-            </AiFillCheckCircle>
+            />
           </td>
         </>
       ) : (
         <>
           <td>
-            <input type="text" {...register("bookName")} />
+            {loan.tombo_book}
           </td>
           <td>
-            <input type="text" {...register("studentName")} />
+            {loan.id_student}
           </td>
           <td>
             <input type="date" {...register("deliveryDate")} />
@@ -131,6 +112,13 @@ export const LoanItem = ({
             <button onClick={handleSubmit(onSubmit)} className="buttons edit">
               Editar
             </button>
+          </td>
+          <td>
+            <AiFillDelete
+              className="buttons"
+              style={{ color: "red" }}
+              onClick={() => onDelete(loan.id)}
+            />
           </td>
         </>
       )}
