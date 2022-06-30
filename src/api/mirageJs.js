@@ -28,6 +28,94 @@ export default function () {
                 status: 1,
                 publisher: 'Klaunga',
             })
+            server.create('book', {
+                tombo: 2,
+                title: 'Porpeta',
+                CDD: 2,
+                author: 'Sla Mn',
+                status: 1,
+                publisher: 'Klaunga',
+            })
+            server.create('book', {
+                tombo: 2,
+                title: 'Porpeta',
+                CDD: 2,
+                author: 'Sla Mn',
+                status: 1,
+                publisher: 'Klaunga',
+            })
+            server.create('book', {
+                tombo: 2,
+                title: 'Porpeta',
+                CDD: 2,
+                author: 'Sla Mn',
+                status: 1,
+                publisher: 'Klaunga',
+            })
+            server.create('book', {
+                tombo: 2,
+                title: 'Porpeta',
+                CDD: 2,
+                author: 'Sla Mn',
+                status: 1,
+                publisher: 'Klaunga',
+            })
+            server.create('book', {
+                tombo: 2,
+                title: 'Porpeta',
+                CDD: 2,
+                author: 'Sla Mn',
+                status: 1,
+                publisher: 'Klaunga',
+            })
+            server.create('book', {
+                tombo: 2,
+                title: 'Porpeta',
+                CDD: 2,
+                author: 'Sla Mn',
+                status: 1,
+                publisher: 'Klaunga',
+            })
+            server.create('book', {
+                tombo: 2,
+                title: 'Porpeta',
+                CDD: 2,
+                author: 'Sla Mn',
+                status: 1,
+                publisher: 'Klaunga',
+            })
+            server.create('book', {
+                tombo: 2,
+                title: 'Porpeta',
+                CDD: 2,
+                author: 'Sla Mn',
+                status: 1,
+                publisher: 'Klaunga',
+            })
+            server.create('book', {
+                tombo: 2,
+                title: 'Porpeta',
+                CDD: 2,
+                author: 'Sla Mn',
+                status: 1,
+                publisher: 'Klaunga',
+            })
+            server.create('book', {
+                tombo: 2,
+                title: 'Porpeta',
+                CDD: 2,
+                author: 'Sla Mn',
+                status: 1,
+                publisher: 'Klaunga',
+            })
+            server.create('book', {
+                tombo: 2,
+                title: 'Porpeta',
+                CDD: 2,
+                author: 'Sla Mn',
+                status: 1,
+                publisher: 'Klaunga',
+            })
         },
 
         routes() {
@@ -47,7 +135,14 @@ export default function () {
             this.post('/loans/add', (schema, request) => {
                 const attrs = JSON.parse(request.requestBody)
 
-                return schema.loans.create(attrs)
+                console.log(attrs)
+
+                return schema.loans.create({
+                    ...attrs, 
+                    id_employee: 1,
+                    dateAdt: new Date,
+                    situation: false,
+                })
             })
             this.delete('/loans/:id', async (schema, request) => {
                 const id = request.params.id
@@ -70,7 +165,7 @@ export default function () {
             })
             this.post('/books/add', async (schema, request) => {
                 const attrs = JSON.parse(request.requestBody)
-                
+
                 await schema.books.create(attrs)
             })
             this.delete('/books/:id', async (schema, request) => {

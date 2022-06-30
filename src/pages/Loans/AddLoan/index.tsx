@@ -7,21 +7,29 @@ import { Modal } from "../../../components/Modal";
 
 import { AiOutlineClose } from "react-icons/ai";
 import { Container, Input } from "./style";
+import { ReactNode, useEffect, useState } from "react";
 
 interface Loan {
   id: number;
-  tombo_book: number;
-  id_student: number;
-  id_employee: number;
-  studentName: string;
-  deliveryDate: string;
+  student: string;
+  book: string;
+  deliveryDate: Date;
   situation: boolean;
-  dateAdt: string;
-  description: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
+// interface Book {
+//   tombo: number;
+//   title: string;
+//   CDD: number;
+//   author: string;
+//   status: boolean;
+//   publisher: string;
+// }
+
 interface HandleAddLoan {
-  handleAddNewLoan: (dataLoan: Pick<Loan, 'tombo_book' | 'id_student' | 'deliveryDate'>) => void;
+  handleAddNewLoan: (dataLoan: Pick<Loan, 'student' | 'book' | 'deliveryDate'>) => void;
 }
 
 export const AddLoan = ({}) => {
@@ -32,17 +40,21 @@ export const AddLoan = ({}) => {
   } = useForm<FieldValues>();
 
   const navigate = useNavigate();
-
   const {handleAddNewLoan} = useOutletContext<HandleAddLoan>()
+  // const [books, setBooks] = useState<Book[]>([]);
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {    
     handleAddNewLoan({
-      tombo_book: data.tomboBook,
-      id_student: data.idStudent,
-      deliveryDate: data.deliveryDate,
+      book: data.book,
+      student: data.student,
+      deliveryDate: new Date(data.deliveryDate),
     })
     navigate("/loans");
   };
+
+  // useEffect(() => {
+  //   axios.get('/books').then(({data}) => setBooks([...data.books]))
+  // }, []);
 
   return (
     <Modal>
@@ -52,25 +64,25 @@ export const AddLoan = ({}) => {
       />
       <Container onSubmit={handleSubmit(onSubmit)}>
         <div className="input-container">
-          <label htmlFor="tombo-book">Codigo do livro</label>
+          <label htmlFor="book">Nome do livro</label>
           <Input
-            type="number"
-            id="tombo-book"
-            isError={errors.tomboBook}
-            {...register("tomboBook", { required: "Preencha esse campo!" })}
+            type="text"
+            id="book"
+            isError={errors.book}
+            {...register("book", { required: "Preencha esse campo!" })}
           />
-          {errors.tomboBook?.message && <small>{errors.tomboBook?.message}</small>}
+          {errors.book?.message && <small>{errors.book?.message}</small>}
         </div>
         <div className="input-container">
-          <label htmlFor="rm">RM do aluno</label>
+          <label htmlFor="student">Nome do aluno</label>
           <Input
-            type="number"
-            id="rm"
-            isError={errors.idStudent}
-            {...register("idStudent", { required: "Preencha esse campo!" })}
+            type="text"
+            id="student"
+            isError={errors.student}
+            {...register("student", { required: "Preencha esse campo!" })}
           />
-          {errors.idStudent?.message && (
-            <small>{errors.idStudent?.message}</small>
+          {errors.student?.message && (
+            <small>{errors.student?.message}</small>
           )}
         </div>
         <div className="input-container">

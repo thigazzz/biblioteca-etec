@@ -5,20 +5,21 @@ import {
   SubmitHandler,
   useForm,
 } from "react-hook-form";
+import {format} from 'date-fns';
+import ptBR from 'date-fns/locale/pt-BR';
+
 import { AiFillCheckCircle, AiFillDelete, AiFillEdit } from "react-icons/ai";
 
 import { Container } from "./style";
 
 interface Loan {
   id: number;
-  tombo_book: number;
-  id_student: number;
-  id_employee: number;
-  studentName: string;
-  deliveryDate: string;
+  student: string;
+  book: string;
+  deliveryDate: Date;
   situation: boolean;
-  dateAdt: string;
-  description: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 interface LoanItemProps {
@@ -26,7 +27,7 @@ interface LoanItemProps {
   onDelete: (id: number) => void;
   onUpdate: (
     id: number,
-    loanData: Pick<Loan, 'deliveryDate'>,
+    loanData: Pick<Loan, 'student' | 'book' | 'deliveryDate'>,
   ) => void;
   onConcluded: (id: number, dataLoan: Pick<Loan, "situation">) => void;
 }
@@ -43,35 +44,39 @@ LoanItemProps) => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FieldValues>({
-    defaultValues: {
-      deliveryDate: new Intl.DateTimeFormat("pt-BR").format(
-        new Date(loan.deliveryDate)
-      ),
-    },
-  });
+  } = useForm<FieldValues>();
   const [isEdit, setIsEdit] = useState<Boolean>(false);
+  const dateDeliveryFormated = format(new Date(loan.deliveryDate), "EEEE'/'dd'/'MMMM", {
+    locale: ptBR
+  })
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
+    console.log(data.deliveryDate, 'bbbbbbbbbbbbbb')
     onUpdate(
       loan.id,
       {
-        deliveryDate: new Date(data.deliveryDate).toString(),
+        book: data.book,
+        student: data.student,
+        deliveryDate: data.deliveryDate,
       },
     );
 
     setIsEdit(false);
   };
+
+  console.log(loan.deliveryDate)
   return (
     <Container isConcluded={loan.situation} test={"#000"}>
       {!isEdit ? (
         <>
-          <td>{loan.tombo_book}</td>
-          <td>{loan.id_student}</td>
+          <td>{loan.book}</td>
+          <td>{loan.student}</td>
           <td>
-            {new Intl.DateTimeFormat("pt-BR").format(
+            {/* {new Intl.DateTimeFormat("pt-BR").format(
               new Date(loan.deliveryDate)
-            )}
+            )} */}
+            {dateDeliveryFormated.toString()}
+          {/* {new Date('2022-06-30').toString()} */}
           </td>
           <td>
             <AiFillEdit
@@ -100,10 +105,10 @@ LoanItemProps) => {
       ) : (
         <>
           <td>
-            {loan.tombo_book}
+            <input type="text" {...register('book')} placeholder={loan.book}/>
           </td>
           <td>
-            {loan.id_student}
+            <input type="text" {...register('student')} placeholder={loan.student}/>
           </td>
           <td>
             <input type="date" {...register("deliveryDate")} />

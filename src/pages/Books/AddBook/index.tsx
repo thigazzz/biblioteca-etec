@@ -5,6 +5,16 @@ import { Modal } from "../../../components/Modal";
 
 import {Container, Input} from './style';
 
+interface Loan {
+  id: number;
+  student: string;
+  book: string;
+  deliveryDate: Date;
+  situation: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 interface Book {
   tombo: number;
   title: string;

@@ -5,17 +5,16 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { LoanItem } from "./LoanItem";
+import { LoanApi } from "../../services/api";
 
 interface Loan {
   id: number;
-  tombo_book: number;
-  id_student: number;
-  id_employee: number;
-  studentName: string;
-  deliveryDate: string;
+  student: string;
+  book: string;
+  deliveryDate: Date;
   situation: boolean;
-  dateAdt: string;
-  description: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export const Loans = () => {
@@ -23,41 +22,83 @@ export const Loans = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get("/loans").then(({ data }) => setLoans([...data.loans]));
+    LoanApi.get("/").then(({ data }: any) => setLoans([...data.data]));
   }, []);
 
-  const handleAddNewLoan = async (dataLoan: Pick<Loan, 'tombo_book' | 'id_student' | 'deliveryDate'>) => {
-    const { data } = await axios.post("/loans/add", {
+  const handleAddNewLoan = async (dataLoan: Pick<Loan, 'student' | 'book' | 'deliveryDate'>) => {
+    console.log(dataLoan.deliveryDate, 'Data Create')
+
+    const { data } = await LoanApi.post("/create", {
       ...dataLoan,
     });
 
-    setLoans([...loans, data.loan]);
+    setLoans([...loans, data.data]);
+
+    console.log(data)
   };
 
   const handleConcludedLoan = async (
     id: number,
     dataLoan: Pick<Loan, 'situation'>,
   ) => {
-    await axios.post(`/loans/concluded/${id}`, {...dataLoan});
+    await LoanApi.patch(`/${id}`, {...dataLoan});
 
-    await axios.get("/loans").then(({ data }) => setLoans([...data.loans]));
+    const newLoans = loans.map(loan => {
+      if (id === loan.id) {
+        const newLoan = {
+          ...loan,
+          situation: dataLoan.situation
+        }
+        return newLoan
+      }
+
+      return loan
+    })
+
+    setLoans([...newLoans])
+
+    // await axios.get("/loans").then(({ data }) => setLoans([...data.loans]));
   };
 
   const handleDeleteLoan = async (id: number) => {
-    await axios.delete(`/loans/${id}`);
+    await LoanApi.delete(`/${id}`);
 
-    await axios.get("/loans").then(({ data }) => setLoans([...data.loans]));
+    // await axios.get("/loans").then(({ data }) => setLoans([...data.loans]));
+
+    const newLoans = loans.filter(loan => loan.id !== id)
+
+    setLoans([...newLoans])
   };
 
   const handleUpdateLoan = async (
     id: number,
-    dataLoan: Pick<Loan, 'deliveryDate'>,
+    dataLoan: Pick<Loan, 'student' | 'book' | 'deliveryDate'>,
   ) => {
-    const {data} = await axios.patch(`/loans/${id}`, {
+    console.log(new Date(dataLoan.deliveryDate), 'aaaaaaaa')
+
+    await LoanApi.put(`/${id}`, {
       ...dataLoan,
     });
 
-    await axios.get("/loans").then(({ data }) => setLoans([...data.loans]));
+    const newLoans = loans.map(loan => {
+      if (id === loan.id) {
+        const newLoan = {
+          ...loan,
+          book: dataLoan.book,
+          student: dataLoan.student,
+          deliveryDate: dataLoan.deliveryDate
+        }
+        return newLoan
+      }
+
+      return loan
+    })
+
+    console.log(newLoans)
+
+    setLoans([...newLoans])
+
+    // await axios.get("/loans").then(({ data }) => setLoans([...data.loans]));
   };
 
   return (
@@ -90,7 +131,7 @@ export const Loans = () => {
             ))}
           </tbody>
         </Table>
-        <Outlet context={{ handleAddNewLoan }} />
+        <Outlet  context={{ handleAddNewLoan }}/>  
       </div>
     </Container>
   );

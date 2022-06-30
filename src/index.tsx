@@ -6,7 +6,7 @@ import { GlobalStyles } from "./styles/GlobalStyles";
 import mirageJs from "./api/mirageJs";
 
 
-mirageJs()
+// mirageJs()
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
