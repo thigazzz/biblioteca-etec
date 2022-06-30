@@ -3,7 +3,6 @@ import { Table } from "../../components/Table";
 import { Container } from "./style";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { LoanItem } from "./LoanItem";
 import { LoanApi } from "../../services/api";
 
@@ -11,7 +10,7 @@ interface Loan {
   id: number;
   student: string;
   book: string;
-  deliveryDate: Date;
+  deliveryDate: string;
   situation: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -26,7 +25,6 @@ export const Loans = () => {
   }, []);
 
   const handleAddNewLoan = async (dataLoan: Pick<Loan, 'student' | 'book' | 'deliveryDate'>) => {
-    console.log(dataLoan.deliveryDate, 'Data Create')
 
     const { data } = await LoanApi.post("/create", {
       ...dataLoan,
@@ -34,7 +32,6 @@ export const Loans = () => {
 
     setLoans([...loans, data.data]);
 
-    console.log(data)
   };
 
   const handleConcludedLoan = async (
@@ -56,14 +53,10 @@ export const Loans = () => {
     })
 
     setLoans([...newLoans])
-
-    // await axios.get("/loans").then(({ data }) => setLoans([...data.loans]));
   };
 
   const handleDeleteLoan = async (id: number) => {
     await LoanApi.delete(`/${id}`);
-
-    // await axios.get("/loans").then(({ data }) => setLoans([...data.loans]));
 
     const newLoans = loans.filter(loan => loan.id !== id)
 
@@ -94,11 +87,8 @@ export const Loans = () => {
       return loan
     })
 
-    console.log(newLoans)
 
     setLoans([...newLoans])
-
-    // await axios.get("/loans").then(({ data }) => setLoans([...data.loans]));
   };
 
   return (
@@ -106,7 +96,7 @@ export const Loans = () => {
       <div className="center">
         <div className="info">
           <h1>Empréstimos</h1>
-          <button onClick={() => navigate("/loans/add")}>Adicionar</button>
+          <button onClick={() => navigate("/loans/create")}>Adicionar</button>
         </div>
         <Table>
           <thead>

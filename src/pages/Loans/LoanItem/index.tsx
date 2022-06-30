@@ -1,11 +1,11 @@
 import { useState } from "react";
 import {
-  FieldValue,
   FieldValues,
   SubmitHandler,
   useForm,
 } from "react-hook-form";
 import {format} from 'date-fns';
+import { formatISO, parseISO } from "date-fns";
 import ptBR from 'date-fns/locale/pt-BR';
 
 import { AiFillCheckCircle, AiFillDelete, AiFillEdit } from "react-icons/ai";
@@ -16,7 +16,7 @@ interface Loan {
   id: number;
   student: string;
   book: string;
-  deliveryDate: Date;
+  deliveryDate: string;
   situation: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -51,20 +51,19 @@ LoanItemProps) => {
   })
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    console.log(data.deliveryDate, 'bbbbbbbbbbbbbb')
+    const deliveryFormatted = new Date(data.deliveryDate.replace(/-/g, '\/'));
     onUpdate(
       loan.id,
       {
         book: data.book,
         student: data.student,
-        deliveryDate: data.deliveryDate,
+        deliveryDate: formatISO(deliveryFormatted),
       },
     );
 
     setIsEdit(false);
   };
 
-  console.log(loan.deliveryDate)
   return (
     <Container isConcluded={loan.situation} test={"#000"}>
       {!isEdit ? (
@@ -72,11 +71,7 @@ LoanItemProps) => {
           <td>{loan.book}</td>
           <td>{loan.student}</td>
           <td>
-            {/* {new Intl.DateTimeFormat("pt-BR").format(
-              new Date(loan.deliveryDate)
-            )} */}
             {dateDeliveryFormated.toString()}
-          {/* {new Date('2022-06-30').toString()} */}
           </td>
           <td>
             <AiFillEdit

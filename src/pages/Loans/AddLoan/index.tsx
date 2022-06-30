@@ -1,32 +1,24 @@
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import axios from "axios";
-
 import { useNavigate, useOutletContext } from "react-router-dom";
+import {formatISO, format} from 'date-fns';
+
 
 import { Modal } from "../../../components/Modal";
 
 import { AiOutlineClose } from "react-icons/ai";
 import { Container, Input } from "./style";
-import { ReactNode, useEffect, useState } from "react";
+
+
 
 interface Loan {
   id: number;
   student: string;
   book: string;
-  deliveryDate: Date;
+  deliveryDate: string;
   situation: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
-
-// interface Book {
-//   tombo: number;
-//   title: string;
-//   CDD: number;
-//   author: string;
-//   status: boolean;
-//   publisher: string;
-// }
 
 interface HandleAddLoan {
   handleAddNewLoan: (dataLoan: Pick<Loan, 'student' | 'book' | 'deliveryDate'>) => void;
@@ -41,20 +33,17 @@ export const AddLoan = ({}) => {
 
   const navigate = useNavigate();
   const {handleAddNewLoan} = useOutletContext<HandleAddLoan>()
-  // const [books, setBooks] = useState<Book[]>([]);
 
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {    
+  const onSubmit: SubmitHandler<FieldValues> = (data) => {   
+    const deliveryFormatted = new Date(data.deliveryDate.replace(/-/g, '\/'));
+
     handleAddNewLoan({
       book: data.book,
       student: data.student,
-      deliveryDate: new Date(data.deliveryDate),
+      deliveryDate: formatISO(deliveryFormatted),
     })
     navigate("/loans");
   };
-
-  // useEffect(() => {
-  //   axios.get('/books').then(({data}) => setBooks([...data.books]))
-  // }, []);
 
   return (
     <Modal>

@@ -6,7 +6,7 @@ interface ContainerProps {
 }
 
 export const Container = styled.tr<ContainerProps>`
-    border-left: ${props => props.isConcluded ? `2.75rem solid ${props.theme.colors.background}` : '0px solid #000'} !important;
+    border-left: ${props => props.isConcluded ? `.5rem solid ${props.theme.colors.background}` : '0px solid #000'} !important;
 
     transition: border-left .1s;
 

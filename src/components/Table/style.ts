@@ -38,14 +38,20 @@ export const Container = styled.div`
     }
 
     thead {
+      width: 100%;
       height: 3.75rem;
 
       color: #fff;
 
       background-color: ${({ theme }) => theme.colors.background};
 
+      tr {
+        width: 100%;
+      }
+
       th {
         text-align: start;
+
       }
     }
     tbody {
