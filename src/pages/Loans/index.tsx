@@ -26,6 +26,8 @@ export const Loans = () => {
 
   const handleAddNewLoan = async (dataLoan: Pick<Loan, 'student' | 'book' | 'deliveryDate'>) => {
 
+    console.log(dataLoan.deliveryDate)
+
     const { data } = await LoanApi.post("/create", {
       ...dataLoan,
     });

@@ -1,5 +1,5 @@
 import axios from "axios";
 
 export const LoanApi = axios.create({
-  baseURL: "http://localhost:8080/loans",
+  baseURL: "https://pw-backend-biblioteca.herokuapp.com/loans",
 });
